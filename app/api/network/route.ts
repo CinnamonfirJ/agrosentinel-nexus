@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import os from "node:os";
+import { backendUrl } from "../../backend-url";
 export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
-    const auth = await fetch("http://127.0.0.1:8000/api/auth/me", {
+    const auth = await fetch(backendUrl("api/auth/me"), {
       headers: {
         Cookie: request.headers.get("cookie") || "",
         Authorization: request.headers.get("authorization") || "",
@@ -12,6 +13,9 @@ export async function GET(request: NextRequest) {
     });
     if (!auth.ok)
       return NextResponse.json({ detail: "Sign in first." }, { status: 401 });
+    if (process.env.VERCEL) {
+      return NextResponse.json({ addresses: [{ name: "Deployed workspace", url: request.nextUrl.origin, priority: 0 }] });
+    }
     const candidates = Object.entries(os.networkInterfaces())
       .flatMap(([name, addresses]) =>
         (addresses || [])

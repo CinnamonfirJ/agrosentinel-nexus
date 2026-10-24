@@ -1,4 +1,5 @@
 import { Dashboard } from "../ui";
+import { backendUrl } from "../backend-url";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Workspace } from "../../shared/contracts";
@@ -10,7 +11,7 @@ export default async function Page() {
   let initial: Workspace | null = null;
   try {
     const headers = { Authorization: "Bearer " + token };
-    const auth = await fetch("http://127.0.0.1:8000/api/auth/me", {
+    const auth = await fetch(backendUrl("api/auth/me"), {
       headers,
       cache: "no-store",
     });
@@ -20,7 +21,7 @@ export default async function Page() {
       if (person.role !== "manager") redirect("/field");
     }
     const response = await fetch(
-      "http://127.0.0.1:8000/api/region-map?region=kaduna&period=24h",
+      backendUrl("api/region-map?region=kaduna&period=24h"),
       { headers, cache: "no-store" },
     );
     if (response.ok) initial = await response.json();

@@ -3,10 +3,11 @@ import { stat } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { Readable } from "node:stream";
 import path from "node:path";
+import { backendUrl } from "../../../backend-url";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
-  const auth = await fetch("http://127.0.0.1:8000/api/auth/me", {
+  const auth = await fetch(backendUrl("api/auth/me"), {
     headers: {
       Cookie: request.headers.get("cookie") || "",
       Authorization: request.headers.get("authorization") || "",

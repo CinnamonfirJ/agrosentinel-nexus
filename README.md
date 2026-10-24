@@ -1,5 +1,7 @@
 # AgroSentinel Nexus
 
+For the Vercel project with Next.js and FastAPI services, see [Vercel deployment](docs/VERCEL.md).
+
 Grounded field intelligence with a Next.js dashboard, Expo app for Android and iOS, and FastAPI/LangGraph backend.
 
 ## Server setup

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { backendUrl } from "../../backend-url";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const BASE = "http://127.0.0.1:8000";
 async function proxy(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
@@ -39,10 +39,7 @@ async function proxy(
   }
   try {
     const upstream = await fetch(
-      BASE +
-        "/api/" +
-        path.map(encodeURIComponent).join("/") +
-        request.nextUrl.search,
+      backendUrl("api/" + path.map(encodeURIComponent).join("/") + request.nextUrl.search),
       {
         method: request.method,
         headers,
@@ -75,7 +72,7 @@ async function proxy(
     return NextResponse.json(
       {
         detail:
-          "The local backend is unavailable. Start AgroSentinel with npm run dev:all.",
+          "The backend is unavailable. Check the service deployment and database connection.",
       },
       { status: 503 },
     );

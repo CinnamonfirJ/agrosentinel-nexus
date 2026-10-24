@@ -19,7 +19,9 @@ REGIONS.update(json.loads(db.setting('custom_regions','{}')))
 
 @asynccontextmanager
 async def lifespan(app):
-    tasks=[asyncio.create_task(pipeline.worker()),asyncio.create_task(pipeline.scheduler())]
+    # Vercel handles HTTP; a separately hosted worker owns continuous jobs.
+    external = os.environ.get('VERCEL') or os.environ.get('AGRO_WORKER_MODE') == 'external'
+    tasks=[] if external else [asyncio.create_task(pipeline.worker()),asyncio.create_task(pipeline.scheduler())]
     yield
     for task in tasks:task.cancel()
     await asyncio.gather(*tasks,return_exceptions=True)
@@ -36,6 +38,12 @@ mutation_lock=asyncio.Lock()
 @app.middleware('http')
 async def serialize_mutations(request,call_next):
     if request.method in ('POST','PUT','PATCH','DELETE'):
+        # Public /api traffic bypasses the Next.js proxy in services mode.
+        from urllib.parse import urlsplit
+        origin=request.headers.get('origin')
+        if origin and urlsplit(origin).netloc != request.headers.get('host'):
+            from fastapi.responses import JSONResponse
+            return JSONResponse({'detail':'Cross-origin request rejected'},status_code=403)
         async with mutation_lock:
             if infrastructure.migrating():
                 from fastapi.responses import JSONResponse
@@ -114,7 +122,7 @@ class Account(BaseModel):
 
 def auth_response(response,current):
     token=db.session(current['id'])
-    response.set_cookie('agro_session',token,max_age=30*86400,httponly=True,samesite='lax')
+    response.set_cookie('agro_session',token,max_age=30*86400,httponly=True,samesite='lax',secure=bool(os.environ.get('VERCEL')))
     return {'token':token,'user':{k:current[k] for k in ('id','email','name','role')}}
 
 @app.post('/api/auth/register')

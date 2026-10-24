@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.runtime/
+backend/.venv/
+backend/data/
+**/__pycache__/
+.pytest_cache/
+apps/mobile/node_modules/
+apps/mobile/android/
+apps/mobile/ios/
+apps/mobile/dist/

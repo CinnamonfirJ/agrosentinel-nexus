@@ -1,5 +1,5 @@
 """Persisted background queue with LangGraph execution and auditable tool events."""
-import asyncio,json,time,uuid
+import asyncio,json,time,uuid,os
 from typing import TypedDict
 from langgraph.graph import StateGraph,START,END
 from . import db,providers,infrastructure
@@ -118,7 +118,7 @@ async def _worker(event):
             continue
         if scan:await asyncio.sleep(1)
         else:
-            try:await asyncio.wait_for(event.wait(),timeout=900)
+            try:await asyncio.wait_for(event.wait(),timeout=float(os.environ.get('AGRO_QUEUE_POLL_SECONDS','900')))
             except TimeoutError:pass
 
 async def recheck():

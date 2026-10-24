@@ -6,7 +6,11 @@ from cryptography.fernet import Fernet
 
 class InfrastructureError(RuntimeError): pass
 
-ROOT = Path(os.environ.get('AGRO_DATA_DIR', Path(__file__).parent / 'data'))
+if os.environ.get('VERCEL') and not os.environ.get('AGRO_TESTING'):
+    required = ('DATABASE_URL','AWS_ENDPOINT_URL_S3','AWS_ACCESS_KEY_ID','AWS_SECRET_ACCESS_KEY','AWS_REGION','AGRO_VAULT_KEY')
+    missing = [name for name in required if not os.environ.get(name)]
+    if missing:raise InfrastructureError('Missing Vercel server environment variables: ' + ', '.join(missing))
+ROOT = Path(os.environ.get('AGRO_DATA_DIR', '/tmp/agrosentinel' if os.environ.get('VERCEL') else Path(__file__).parent / 'data'))
 ROOT.mkdir(parents=True, exist_ok=True)
 (ROOT / 'images').mkdir(exist_ok=True)
 keyfile = ROOT / 'vault.key'
