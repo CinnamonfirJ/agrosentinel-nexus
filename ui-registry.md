@@ -21,3 +21,7 @@ Source chips use blue text and pale blue fill with a 1px blue border and 4px rad
 ## Motion
 
 GSAP drives web motion through `app/motion.ts` (custom eases `field` and `settle`). Entrances stagger upward; headlines reveal by masked lines. The filament marks "growth / agent at work" on the landing, login, field advisory and analyzing step. Lime pulses only for live or active agent states. Pills carry a magnetic round nub. Never let a CSS transition run on a transform GSAP animates. Native motion uses `Animated` with the native driver. Reduced motion disables loops and shows final states.
+
+## App identity assets
+
+The AgroSentinel launcher mark is a rounded two-leaf forest-green sprout with a horizontal soil baseline, on paper #F4F3EE. Generated transparent master: public/brand/agrosentinel-mark.png; opaque 1024px export: public/brand/agrosentinel-icon.png. Keep the padded composition for adaptive and maskable icon crops. Regenerate size/format exports with node scripts/build-icons.mjs. Web uses Next metadata icon files and explicit PWA manifest icons. Android uses transparent foreground/monochrome layers; iOS uses the opaque icon. Native launcher changes require a new binary.
