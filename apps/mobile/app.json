@@ -1,0 +1,82 @@
+{
+  "expo": {
+    "name": "AgroSentinel Nexus",
+    "slug": "agrosentinel-nexus",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.agrosentinel.nexus",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        },
+        "NSLocalNetworkUsageDescription": "Connect AgroSentinel to your cooperative workspace on the same Wi-Fi."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "app.agrosentinel.nexus"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "recordAudioAndroid": false,
+          "cameraPermission": "Allow AgroSentinel to capture leaf specimens and scan workspace pairing codes."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow AgroSentinel to import a leaf specimen."
+        }
+      ],
+      "expo-secure-store",
+      "expo-background-task",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Attach a field location to obtain local weather and regional outbreak mapping."
+        }
+      ],
+      "expo-notifications"
+    ],
+    "scheme": "agrosentinel",
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "938b0157-b793-4be0-8f3d-8666a3904582"
+      }
+    },
+    "owner": "jessecinnamonfir"
+  }
+}
