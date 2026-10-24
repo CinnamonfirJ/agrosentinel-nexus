@@ -1,0 +1,17 @@
+// CMake must hash long object paths before Windows/Ninja's 260-character limit.
+// Apply only to the local build; generated native projects stay reproducible.
+gradle.beforeProject { project ->
+    project.afterEvaluate {
+        def android = project.extensions.findByName('android')
+        if (android != null) {
+            def staging = project.name == 'app' ? '.agro-cxx/' : '.agrosentinel-cxx/'
+            android.externalNativeBuild.cmake.buildStagingDirectory = new File(System.getProperty('user.home'), staging + project.name)
+            def args = android.defaultConfig.externalNativeBuild.cmake.arguments
+            args.removeAll { it.toString().startsWith('-DCMAKE_OBJECT_PATH_MAX=') }
+            args.add('-DCMAKE_OBJECT_PATH_MAX=240')
+            args.add('-DCMAKE_JOB_POOLS=compile=2;link=1')
+            args.add('-DCMAKE_JOB_POOL_COMPILE=compile')
+            args.add('-DCMAKE_JOB_POOL_LINK=link')
+        }
+    }
+}

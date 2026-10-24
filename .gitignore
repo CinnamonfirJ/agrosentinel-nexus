@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.expo/
+dist/
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+backend/.venv/
+backend/data/
+__pycache__/
+.pytest_cache/
+.runtime/
+apps/mobile/android/
+apps/mobile/ios/
